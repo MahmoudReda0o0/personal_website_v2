@@ -36,10 +36,14 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.3.0
+  firebase_core: ^4.7.0
+  firebase_auth: ^6.4.0
+  cloud_firestore: ^6.3.0
+  provider: ^6.1.5+1
   qr_flutter:
     git:
       url: https://github.com/theyakka/qr.flutter.git
-      
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
