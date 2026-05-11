@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:personal_website_v2/core/firebase/firebase_config.dart';
+import 'package:personal_website_v2/core/model/setting_model.dart';
 import 'package:personal_website_v2/core/model/social_media.dart';
 
 class FirebaseService {
@@ -13,8 +14,8 @@ class FirebaseService {
   Future<List<SocialMedia>> getSocialMedia() async {
     try {
       var data = await _firestore
-          .collection(FirebaseConfig.personalInfoCollection)
-          .doc(FirebaseConfig.socialMediaDocument)
+          .collection(FirebaseConfig.personalInfoCol)
+          .doc(FirebaseConfig.socialMediaDoc)
           .get();
       if (data.data() == null) return <SocialMedia>[];
       List<SocialMedia> socialLinks = [];
@@ -23,11 +24,29 @@ class FirebaseService {
           socialLinks.add(SocialMedia.fromMap(value));
         }
       });
-      log(name: 'csdcnusdycsd', '${socialLinks[0].name}');
+
       return socialLinks;
     } catch (e) {
       log(name: 'firebase_service_error', e.toString());
       return <SocialMedia>[];
+    }
+  }
+
+  Future<SettingModel> getSetting() async {
+    try {
+      var data = await _firestore
+          .collection(FirebaseConfig.personalInfoCol)
+          .doc(FirebaseConfig.settingDoc)
+          .get();
+      if (data.data() == null) {
+        return SettingModel.defaultSetting();
+      }
+      log(name: 'firebase_setting', '${data.data()}');
+
+      return SettingModel.fromMap(data.data()!);
+    } catch (e) {
+      log(name: 'firebase_service_error', e.toString());
+      return SettingModel.defaultSetting();
     }
   }
 }

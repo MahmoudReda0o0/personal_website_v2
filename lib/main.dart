@@ -11,7 +11,7 @@ void main() async {
   );
   runApp(
     ChangeNotifierProvider(
-      create: (context) => SocialMediaProvider(),
+      create: (context) => AppProvider(),
       child: const MyApp(),
     ),
   );

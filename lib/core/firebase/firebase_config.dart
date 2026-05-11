@@ -1,4 +1,5 @@
 class FirebaseConfig {
-  static const String personalInfoCollection = 'personal_info';
-  static const String socialMediaDocument = 'social_media';
+  static const String personalInfoCol = 'personal_info';
+  static const String socialMediaDoc = 'social_media';
+  static const String settingDoc = 'setting';
 }

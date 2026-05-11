@@ -17,10 +17,14 @@ class QrCreate extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              Provider.of<SocialMediaProvider>(
+              Provider.of<AppProvider>(
                 context,
                 listen: false,
               ).fetchSocialData();
+              Provider.of<AppProvider>(
+                context,
+                listen: false,
+              ).fetchSettingData();
             },
             child: Container(
               margin: EdgeInsets.only(top: 50),
@@ -30,7 +34,7 @@ class QrCreate extends StatelessWidget {
               child: CustomText(text: 'Fitch Social Data'),
             ),
           ),
-          Consumer<SocialMediaProvider>(
+          Consumer<AppProvider>(
             builder: (context, data, child) {
               if (data.socialData.isEmpty) {
                 return const Center(child: CircularProgressIndicator());
@@ -41,6 +45,16 @@ class QrCreate extends StatelessWidget {
                   }),
                 );
               }
+            },
+          ),
+          Consumer<AppProvider>(
+            builder: (context, data, child) {
+              return Row(
+                children: [
+                  Text(data.setting.showProjects.toString()),
+                  Text(data.setting.showSocialMedial.toString()),
+                ],
+              );
             },
           ),
           Center(
