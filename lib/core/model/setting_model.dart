@@ -1,6 +1,6 @@
 class SettingModel {
-  final bool showProjects;
-  final bool showSocialMedial;
+  bool showProjects;
+  bool showSocialMedial;
 
   SettingModel({required this.showProjects, required this.showSocialMedial});
 

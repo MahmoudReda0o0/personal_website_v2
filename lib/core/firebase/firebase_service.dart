@@ -49,4 +49,20 @@ class FirebaseService {
       return SettingModel.defaultSetting();
     }
   }
+
+  Future<bool> updateSettingData(SettingModel value) async {
+    try {
+      await _firestore
+          .collection(FirebaseConfig.personalInfoCol)
+          .doc(FirebaseConfig.settingDoc)
+          .update({
+            'showSocialMedial': value.showSocialMedial,
+            'showProjects': value.showProjects,
+          });
+      return true;
+    } catch (e) {
+      log(name: 'firebase_service_error', e.toString());
+      return false;
+    }
+  }
 }
