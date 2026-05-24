@@ -1,0 +1,44 @@
+
+[functions.hello-flutter]
+enabled = true
+verify_jwt = false
+import_map = "./functions/hello-flutter/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/hello-flutter/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/hello-flutter/*.html" ]
+
+[functions.personal_website_api]
+enabled = true
+verify_jwt = false
+import_map = "./functions/personal_website_api/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/personal_website_api/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/personal_website_api/*.html" ]
+
+[functions.Mivo]
+enabled = true
+verify_jwt = false
+import_map = "./functions/Mivo/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/Mivo/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/Mivo/*.html" ]
+
+[functions.mivo-ai]
+enabled = true
+verify_jwt = false
+import_map = "./functions/mivo-ai/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/mivo-ai/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/mivo-ai/*.html" ]
