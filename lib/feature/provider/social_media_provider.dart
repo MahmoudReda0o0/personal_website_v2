@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:personal_website_v2/core/firebase/firebase_service.dart';
 import 'package:personal_website_v2/core/model/setting_model.dart';

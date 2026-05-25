@@ -34,7 +34,7 @@ class CustomButton extends StatelessWidget {
         child: Center(
           child: CustomText(
             text: text,
-            color: textColor ?? AppColors.appPrimaryColor,
+            color: textColor ?? AppColors.appFAFAFABackGround2,
             fontSize: textSize ?? 18.sp,
             fontWeight: FontWeight.w600,
           ),

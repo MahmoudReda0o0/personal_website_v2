@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:personal_website_v2/core/provider/social_media_provider.dart';
-import 'package:personal_website_v2/mobile_app/qr_create.dart';
+import 'package:personal_website_v2/feature/provider/social_media_provider.dart';
+import 'package:personal_website_v2/feature/screen/mobile_screen.dart';
+import 'package:personal_website_v2/feature/supabase_data/supabase_config.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   await Supabase.initialize(
-    url: 'https://jwrafjkdzdffrznsnqmh.supabase.co',
-    anonKey: 'sb_publishable_sU2nPl2cL4T0Epn3eocnZA_G_XohwGH',
+    url: SupabaseConfig.supabaseUrl,
+    anonKey: SupabaseConfig.supabaseAnonKey,
   );
   runApp(MyApp());
 }
