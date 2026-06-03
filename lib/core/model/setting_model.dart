@@ -1,17 +1,38 @@
 class SettingModel {
-  bool showProjects;
-  bool showSocialMedial;
+  bool skills;
+  bool projects;
+  bool aiChat;
+  bool game;
+  bool myInfo;
+  bool socialMedial;
 
-  SettingModel({required this.showProjects, required this.showSocialMedial});
+  SettingModel({
+    required this.skills,
+    required this.projects,
+    required this.aiChat,
+    required this.game,
+    required this.myInfo,
+    required this.socialMedial,
+  });
 
-  static defaultSetting() {
-    return SettingModel(showProjects: false, showSocialMedial: false);
-  }
-
-  factory SettingModel.fromMap(Map<String, dynamic> map) {
+  factory SettingModel.fromJson(Map<String, dynamic> json) {
     return SettingModel(
-      showProjects: map['showProjects'] ?? false,
-      showSocialMedial: map['showSocialMedial'] ?? false,
+      skills: json['skills'] ?? false,
+      projects: json['projects'] ?? false,
+      aiChat: json['aiChat'] ?? false,
+      game: json['game'] ?? false,
+      myInfo: json['myInfo'] ?? false,
+      socialMedial: json['socialMedial'] ?? false,
+    );
+  }
+  factory SettingModel.defaultSetting() {
+    return SettingModel(
+      skills: false,
+      projects: false,
+      aiChat: false,
+      game: false,
+      myInfo: false,
+      socialMedial: false,
     );
   }
 }

@@ -1,11 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:personal_website_v2/core/app/app_image.dart';
 import 'package:personal_website_v2/core/custom_widgets/custom_button/custom_button.dart';
 import 'package:personal_website_v2/core/custom_widgets/custom_image/custom_image.dart';
 import 'package:personal_website_v2/core/custom_widgets/custom_text/custom_text.dart';
-import 'package:personal_website_v2/feature/provider/social_media_provider.dart';
+import 'package:personal_website_v2/core/model/personal_info.dart';
+import 'package:personal_website_v2/feature/provider/app_provider.dart';
 import 'package:personal_website_v2/feature/screen/website_screen.dart';
+import 'package:personal_website_v2/feature/supabase_data/s_database.dart';
+import 'package:personal_website_v2/feature/supabase_data/s_function.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,7 +35,7 @@ class QrCreate extends StatelessWidget {
           // CustomImage(image: AppImage.facebook),
           Consumer<AppProvider>(
             builder: (context, data, child) {
-              if (data.setting.showSocialMedial == false) {
+              if (data.setting.socialMedial == false) {
                 return const SizedBox.shrink();
               } else if (data.socialData.isEmpty) {
                 return const Center(child: CircularProgressIndicator());
@@ -40,24 +45,24 @@ class QrCreate extends StatelessWidget {
                   children: List.generate(data.socialData.length, (index) {
                     return GestureDetector(
                       onTap: () async {
-                        final Uri url = Uri.parse(data.socialData[index].link);
-                        await launchUrl(
-                          url,
-                          mode: LaunchMode.externalApplication,
-                        );
+                        // final Uri url = Uri.parse(data.socialData[index].link);
+                        // await launchUrl(
+                        //   url,
+                        //   mode: LaunchMode.externalApplication,
+                        // );
                       },
                       child: Container(
                         margin: EdgeInsets.all(10),
                         child: Column(
                           children: [
-                            CustomImage(
-                              image: AppImage.getSocialImage(
-                                data.socialData[index].name,
-                              ),
-                              height: 50,
-                              width: 50,
-                            ),
-                            CustomText(text: data.socialData[index].name),
+                            // CustomImage(
+                            //   image: AppImage.getSocialImage(
+                            //     data.socialData[index].name,
+                            //   ),
+                            //   height: 50,
+                            //   width: 50,
+                            // ),
+                            // CustomText(text: data.socialData[index].name),
                           ],
                         ),
                       ),
@@ -76,12 +81,12 @@ class QrCreate extends StatelessWidget {
                       children: [
                         CustomText(text: 'social'),
                         Switch(
-                          value: data.setting.showSocialMedial,
+                          value: data.setting.socialMedial,
                           onChanged: (value) {
-                            Provider.of<AppProvider>(
-                              context,
-                              listen: false,
-                            ).changeSocialSetting(value);
+                            // Provider.of<AppProvider>(
+                            //   context,
+                            //   listen: false,
+                            // ).getSettingData();
                           },
                         ),
                       ],
@@ -90,13 +95,8 @@ class QrCreate extends StatelessWidget {
                       children: [
                         CustomText(text: 'project'),
                         Switch(
-                          value: data.setting.showProjects,
-                          onChanged: (value) {
-                            Provider.of<AppProvider>(
-                              context,
-                              listen: false,
-                            ).changeProjectSetting(value);
-                          },
+                          value: data.setting.projects,
+                          onChanged: (value) {},
                         ),
                       ],
                     ),
@@ -104,10 +104,14 @@ class QrCreate extends StatelessWidget {
                       text: 'update setting',
                       textColor: Colors.white,
                       onTap: () {
-                        Provider.of<AppProvider>(
-                          context,
-                          listen: false,
-                        ).updateSettingData();
+                        try {
+                          // Provider.of<AppProvider>(
+                          //   context,
+                          //   listen: false,
+                          // ).getSettingData();
+                        } catch (e) {
+                          log(name: 'update_setting_error', e.toString());
+                        }
                       },
                     ),
                     CustomButton(
@@ -120,6 +124,13 @@ class QrCreate extends StatelessWidget {
                             builder: (context) => WebsiteScreen(),
                           ),
                         );
+                      },
+                    ),
+                    CustomButton(
+                      text: 'Test ',
+                      textColor: Colors.white,
+                      onTap: () async {
+                        SupabaseFunction().testApi();
                       },
                     ),
                   ],

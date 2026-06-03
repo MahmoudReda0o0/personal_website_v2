@@ -1,11 +1,36 @@
 // lib/shared/models/social_media.dart
 class SocialMedia {
-  final String name;
-  final String link;
+  final String whatsapp;
+  final String facebook;
+  final String linkedin;
+  final String github;
+  final String email;
 
-  SocialMedia({required this.name, required this.link});
+  SocialMedia({
+    required this.whatsapp,
+    required this.facebook,
+    required this.linkedin,
+    required this.github,
+    required this.email,
+  });
 
-  factory SocialMedia.fromMap(Map<String, dynamic> map) {
-    return SocialMedia(name: map['name'] ?? '', link: map['link'] ?? '');
+  factory SocialMedia.fromJson(Map<String, dynamic> json) {
+    return SocialMedia(
+      whatsapp: json['whats_app'] ?? '',
+      facebook: json['facebook'] ?? '',
+      linkedin: json['linkedin'] ?? '',
+      github: json['github'] ?? '',
+      email: json['email'] ?? '',
+    );
+  }
+
+  factory SocialMedia.defaultSocialMedia() {
+    return SocialMedia(
+      whatsapp: '',
+      facebook: '',
+      linkedin: '',
+      github: '',
+      email: '',
+    );
   }
 }
