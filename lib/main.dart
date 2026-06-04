@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:personal_website_v2/feature/provider/ai_provider.dart';
 import 'package:personal_website_v2/feature/provider/app_provider.dart';
 import 'package:personal_website_v2/feature/screen/mobile_screen.dart';
 import 'package:personal_website_v2/feature/supabase_data/s_config.dart';
@@ -22,26 +23,35 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        AppProvider appProvider = AppProvider();
-        // appProvider.fetchInitialData();
-        return appProvider;
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => MivoAiProvider()),
+        ChangeNotifierProvider(create: (context) => AppProvider()),
+      ],
+      builder: (context, child) {
+        return ScreenUtilInit(
+          designSize: const Size(414, 896),
+          builder: (context, child) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Flutter Demo',
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              ),
+              home: const QrCreate(),
+            );
+          },
+        );
       },
-      child: ScreenUtilInit(
-        designSize: const Size(414, 896),
-        builder: (context, child) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            ),
-            home: const QrCreate(),
-          );
-        },
-      ),
     );
+    // return ChangeNotifierProvider(
+    //   create: (context) {
+    //     AppProvider appProvider = AppProvider();
+    //     // appProvider.fetchInitialData();
+    //     return appProvider;
+    //   },
+    //   child:
+    // );
   }
 }
 

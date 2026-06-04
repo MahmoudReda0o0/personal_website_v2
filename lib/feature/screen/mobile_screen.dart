@@ -126,13 +126,6 @@ class QrCreate extends StatelessWidget {
                         );
                       },
                     ),
-                    CustomButton(
-                      text: 'Test ',
-                      textColor: Colors.white,
-                      onTap: () async {
-                        SupabaseFunction().testApi();
-                      },
-                    ),
                   ],
                 ),
               );
