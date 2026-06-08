@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:personal_website_v2/core/custom_widgets/custom_button/custom_button.dart';
 import 'package:personal_website_v2/core/custom_widgets/custom_text/custom_text.dart';
@@ -7,6 +8,7 @@ import 'package:personal_website_v2/feature/provider/ai_provider.dart';
 import 'package:personal_website_v2/feature/provider/app_provider.dart';
 import 'package:personal_website_v2/feature/supabase_data/s_function.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WebsiteScreen extends StatefulWidget {
   const WebsiteScreen({super.key});
@@ -35,8 +37,8 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // CustomText(text: 'Mahmoud reda'),
-                CustomText(text: data.personalInfo.name),
-                CustomText(text: data.setting.myInfo.toString()),
+                // CustomText(text: data.personalInfo.name),
+                // CustomText(text: data.setting.myInfo.toString()),
                 Consumer<MivoAiProvider>(
                   builder: (context, value, child) {
                     return Consumer<MivoAiProvider>(
@@ -45,19 +47,39 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
                           children: [
                             Column(
                               children: [
-                                CustomText(text: value.answer),
+                                Linkify(
+                                  text: value.answer,
+                                  onOpen: (link) async {
+                                    await launchUrl(
+                                      Uri.parse(link.url),
+                                      mode: LaunchMode.externalApplication,
+                                    );
+                                  },
+                                ),
+                                // CustomText(text: value.answer),
                                 20.verticalSpace,
                                 CustomTextField(
                                   controller: questionController,
                                   enabled: !value.isLoading,
                                 ),
-                                8.verticalSpace,
+                                20.verticalSpace,
+                                // CustomButton(
+                                //   text: 'Ask Mivo',
+                                //   onTap: () {
+                                //     FocusManager.instance.primaryFocus
+                                //         ?.unfocus();
+                                //     context.read<MivoAiProvider>().askMivo(
+                                //       questionController.text,
+                                //     );
+                                //   },
+                                // ),
+                                // 20.verticalSpace,
                                 CustomButton(
-                                  text: 'Ask Mivo',
+                                  text: 'Ask Mivo V2',
                                   onTap: () {
                                     FocusManager.instance.primaryFocus
                                         ?.unfocus();
-                                    context.read<MivoAiProvider>().askMivo(
+                                    context.read<MivoAiProvider>().askMivoV2(
                                       questionController.text,
                                     );
                                   },
@@ -81,13 +103,13 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
                   },
                 ),
 
-                20.verticalSpace,
-                CustomButton(
-                  onTap: () {
-                    SupabaseFunction().getJsonSkills();
-                  },
-                  text: 'Get Skills',
-                ),
+                // 20.verticalSpace,
+                // CustomButton(
+                //   onTap: () {
+                //     SupabaseFunction().getJsonSkills();
+                //   },
+                //   text: 'Get Skills',
+                // ),
               ],
             );
           },

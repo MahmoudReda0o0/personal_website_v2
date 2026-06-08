@@ -32,6 +32,18 @@ class SupabaseFunction {
     return response.data['answer'];
   }
 
+  Future<String> askMivoV2(String question) async {
+    final response = await functions.invoke(
+      'ask_mivo_v2',
+      body: {'question': question},
+    );
+    log(
+      name: 'ask_mivo_v2_response',
+      'Q: $question \nA: ${response.data['answer']}',
+    );
+    return response.data['answer'];
+  }
+
   Future<void> getJsonSkills() async {
     final response = await functions.invoke('get_skills_json', body: {});
     log(name: 'function_response', response.data.toString());

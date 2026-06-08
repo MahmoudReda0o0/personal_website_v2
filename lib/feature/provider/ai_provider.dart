@@ -15,4 +15,14 @@ class MivoAiProvider extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
+
+  Future<void> askMivoV2(String question) async {
+    answer = '';
+    isLoading = true;
+    notifyListeners();
+    final response = await supabaseFunction.askMivoV2(question);
+    answer = response;
+    isLoading = false;
+    notifyListeners();
+  }
 }

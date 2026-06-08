@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:personal_website_v2/feature/provider/ai_provider.dart';
 import 'package:personal_website_v2/feature/provider/app_provider.dart';
 import 'package:personal_website_v2/feature/screen/mobile_screen.dart';
+import 'package:personal_website_v2/feature/screen/website_screen.dart';
 import 'package:personal_website_v2/feature/supabase_data/s_config.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               ),
-              home: const QrCreate(),
+              home: kIsWeb ? const WebsiteScreen() : const QrCreate(),
             );
           },
         );
