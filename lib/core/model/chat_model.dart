@@ -15,7 +15,7 @@ class Chat {
     if (json['choices'] != null) {
       choices = <Choices>[];
       json['choices'].forEach((v) {
-        choices!.add(new Choices.fromJson(v));
+        choices!.add(Choices.fromJson(v));
       });
     }
   }
@@ -31,7 +31,7 @@ class Choices {
   Choices.fromJson(Map<String, dynamic> json) {
     index = json['index'];
     message = json['message'] != null
-        ? new Message.fromJson(json['message'])
+        ? Message.fromJson(json['message'])
         : null;
     finishReason = json['finish_reason'];
   }

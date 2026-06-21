@@ -41,31 +41,29 @@ class CustomTextValueAndImage extends StatelessWidget {
     return Row(
       crossAxisAlignment: crossAxisAlignment,
       children: [
-        image != null
-            ? CustomImage(
-                image: image ?? '',
-                width: imageSize ?? 14,
-                height: imageSize ?? 14,
-                color: imageColor,
-              )
-            : SizedBox.shrink(),
-        image != null ? 4.horizontalSpace : SizedBox.shrink(),
-
+        if (image != null)
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: CustomImage(
+              image: image!,
+              width: imageSize ?? 14,
+              height: imageSize ?? 14,
+              color: imageColor,
+            ),
+          ),
         CustomText(
           text: value != null ? text : "$text ",
-          color: textColor ?? AppColors.app1A1A1AText1,
+          color: textColor ?? AppColors.lightTextPrimary,
           fontSize: textSize ?? 16,
         ),
-        value == null && value != ''
-            ? const SizedBox.shrink()
-            : Flexible(
-                child: CustomText(
-                  // overflow: TextOverflow.fade,
-                  text: value!,
-                  color: imageColor ?? valueColor ?? AppColors.app1A1A1AText1,
-                  fontSize: valueSize ?? 16.w,
-                ),
-              ),
+        if (value != null && value != '')
+          Flexible(
+            child: CustomText(
+              text: value!,
+              color: imageColor ?? valueColor ?? AppColors.lightTextPrimary,
+              fontSize: valueSize ?? 16.w,
+            ),
+          ),
       ],
     );
   }

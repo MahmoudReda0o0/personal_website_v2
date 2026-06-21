@@ -1,88 +1,62 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:personal_website_v2/core/app/app_colors.dart';
-import 'package:personal_website_v2/core/app/app_image.dart';
-import 'package:personal_website_v2/core/custom_widgets/custom_image/custom_image.dart';
-import 'package:personal_website_v2/core/custom_widgets/custom_text/custom_text.dart';
 
 class CustomTextField extends StatelessWidget {
-  CustomTextField({
+  const CustomTextField({
     super.key,
     required this.controller,
-
     this.enabled = true,
-    this.prefixIcon,
-    this.usePrefixCalender = false,
     this.hintText,
     this.suffixIcon,
-    this.useSuffixArrow = false,
     this.maxLines,
-    this.hintLocationTop = false,
-    this.hintFontWeight,
+    this.minLines,
+    this.prefixIcon,
+    this.validator,
+    this.onChanged,
+    this.onSubmitted,
+    this.textInputAction,
+    this.textInputType,
+    this.obscureText = false,
+    this.autofocus = false,
+    this.errorText,
   });
-  TextEditingController controller;
 
-  bool enabled;
-  Widget? prefixIcon;
-  Widget? suffixIcon;
-  bool usePrefixCalender;
-  bool useSuffixArrow;
-  String? hintText;
-  int? maxLines;
-  bool hintLocationTop;
-  FontWeight? hintFontWeight;
+  final TextEditingController controller;
+  final bool enabled;
+  final String? hintText;
+  final Widget? suffixIcon;
+  final Widget? prefixIcon;
+  final int? maxLines;
+  final int? minLines;
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
+  final void Function(String)? onSubmitted;
+  final TextInputAction? textInputAction;
+  final TextInputType? textInputType;
+  final bool obscureText;
+  final bool autofocus;
+  final String? errorText;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // if (hintLocationTop == true)
-        //   CustomText(
-        //     text: hintText ?? '',
-        //     fontSize: 14,
-        //     fontWeight: hintFontWeight ?? FontWeight.w500,
-        //     color: AppColors.app1A1A1AText1,
-        //   ),
-        // 8.verticalSpace,
-        TextFormField(
-          controller: controller,
-          enabled: enabled,
-          maxLines: maxLines,
-          decoration: InputDecoration(
-            filled: true,
-            hint: CustomText(
-              text: hintLocationTop ? '' : hintText ?? '',
-              color: AppColors.appA0A0A0Text2,
-              fontSize: 12.w,
-              fontWeight: FontWeight.w500,
-            ),
-            fillColor: AppColors.appFAFAFABackGround2,
-            // prefixIcon: usePrefixCalender
-            //     ? Container(
-            //         padding: EdgeInsets.all(10),
-            //         child: CustomImage(image: AppImage.calender),
-            //       )
-            //     : prefixIcon,
-            border: _borderStyle(),
-            suffixIcon: useSuffixArrow
-                ? Icon(
-                    Icons.keyboard_arrow_down_sharp,
-                    color: AppColors.appA0A0A0Text2,
-                    size: 30,
-                  )
-                : suffixIcon,
-          ),
-        ),
-      ],
-    );
-  }
-
-  OutlineInputBorder _borderStyle() {
-    return OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10)),
-      borderSide: BorderSide(color: AppColors.appE5E5E5Border),
+    return TextFormField(
+      controller: controller,
+      enabled: enabled,
+      maxLines: maxLines ?? 1,
+      minLines: minLines,
+      obscureText: obscureText,
+      autofocus: autofocus,
+      textInputAction: textInputAction,
+      keyboardType: textInputType,
+      validator: validator,
+      onChanged: onChanged,
+      onFieldSubmitted: onSubmitted,
+      decoration: InputDecoration(
+        filled: true,
+        hintText: hintText,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+        errorText: errorText,
+      ),
     );
   }
 }

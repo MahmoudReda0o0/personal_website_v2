@@ -1,7 +1,4 @@
-import 'dart:convert';
 import 'dart:developer';
-
-import 'package:personal_website_v2/core/model/ai_chat_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseFunction {

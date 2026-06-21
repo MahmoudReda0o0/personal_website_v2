@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:personal_website_v2/core/app/app_colors.dart';
 
 class CustomContainer extends StatelessWidget {
-  CustomContainer({
+  const CustomContainer({
     super.key,
     required this.child,
     this.color,
@@ -10,39 +9,50 @@ class CustomContainer extends StatelessWidget {
     this.borderColor,
     this.horizontalPadding,
     this.verticalPadding,
-    this.usedefaultSahdow = false,
+    this.useDefaultShadow = false,
     this.boxShadow,
+    this.margin,
+    this.width,
+    this.height,
   });
-  Widget child;
-  Color? color;
-  double? borderRadius;
-  Color? borderColor;
-  double? horizontalPadding;
-  double? verticalPadding;
-  bool? usedefaultSahdow;
-  BoxShadow? boxShadow;
+
+  final Widget child;
+  final Color? color;
+  final double? borderRadius;
+  final Color? borderColor;
+  final double? horizontalPadding;
+  final double? verticalPadding;
+  final bool useDefaultShadow;
+  final BoxShadow? boxShadow;
+  final EdgeInsetsGeometry? margin;
+  final double? width;
+  final double? height;
+
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: width,
+      height: height,
+      margin: margin,
       padding: EdgeInsets.symmetric(
-        horizontal: horizontalPadding ?? 8,
-        vertical: verticalPadding ?? 0,
+        horizontal: horizontalPadding ?? 16,
+        vertical: verticalPadding ?? 12,
       ),
       decoration: BoxDecoration(
-        color: color ?? AppColors.appPrimaryColor,
-        borderRadius: BorderRadius.circular(borderRadius ?? 10),
+        color: color ?? Colors.white,
+        borderRadius: BorderRadius.circular(borderRadius ?? 12),
         border: Border.all(color: borderColor ?? Colors.transparent),
         boxShadow: boxShadow != null
             ? [boxShadow!]
-            : usedefaultSahdow == true
-            ? [
-                BoxShadow(
-                  color: AppColors.appE5E5E5Border,
-                  blurRadius: 4,
-                  offset: const Offset(0, 0),
-                ),
-              ]
-            : [],
+            : useDefaultShadow
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : [],
       ),
       child: child,
     );
