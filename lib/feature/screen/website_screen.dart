@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:personal_website_v2/core/app/app_colors.dart';
+import 'package:personal_website_v2/core/app/app_image.dart';
+import 'package:personal_website_v2/core/custom_widgets/custom_image/custom_image.dart';
 
 import 'package:personal_website_v2/core/custom_widgets/custom_text/custom_text.dart';
 import 'package:personal_website_v2/core/custom_widgets/custom_text_field/custom_text_field.dart';
 import 'package:personal_website_v2/feature/provider/ai_provider.dart';
 import 'package:personal_website_v2/feature/provider/app_provider.dart';
+import 'package:personal_website_v2/feature/screen/widgets/mivo_image_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -64,17 +68,27 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
         child: Column(
           children: [
             _buildHeader(context),
-            Expanded(
-              child: Consumer<MivoAiProvider>(
-                builder: (context, ai, _) {
-                  if (ai.answer.isEmpty && !ai.isLoading) {
-                    return _buildEmptyState(context);
-                  }
-                  return _buildChatContent(context, ai);
-                },
+            16.verticalSpace,
+            MivoImageWidget(),
+            SizedBox(
+              height: 350.h,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Consumer<MivoAiProvider>(
+                      builder: (context, ai, _) {
+                        if (ai.answer.isEmpty && !ai.isLoading) {
+                          return _buildEmptyState(context);
+                        }
+                        return _buildChatContent(context, ai);
+                      },
+                    ),
+                  ),
+
+                  _buildInputArea(context),
+                ],
               ),
             ),
-            _buildInputArea(context),
           ],
         ),
       ),
@@ -97,11 +111,7 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
               CircleAvatar(
                 radius: 22,
                 backgroundColor: Colors.white.withValues(alpha: 0.2),
-                child: const Icon(
-                  Icons.person,
-                  color: Colors.white,
-                  size: 28,
-                ),
+                child: const Icon(Icons.person, color: Colors.white, size: 28),
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -143,16 +153,17 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
             size: 64,
             color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
           ),
-          SizedBox(height: 16.h),
+          16.verticalSpace,
           const CustomText(
+            color: AppColors.darkTextPrimary,
             text: 'Ask me anything!',
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
-          SizedBox(height: 8.h),
+          16.verticalSpace,
           const CustomText(
             text: 'Type your question below and I\'ll answer.',
-            color: Color(0xFFA0A0A0),
+            color: AppColors.darkTextPrimary,
             fontSize: 14,
           ),
         ],
@@ -166,23 +177,12 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
       padding: EdgeInsets.all(16.w),
       children: [
         if (ai.question.isNotEmpty)
-          _buildMessageBubble(
-            context,
-            text: ai.question,
-            isUser: true,
-          ),
+          _buildMessageBubble(context, text: ai.question, isUser: true),
         if (ai.answer.isNotEmpty) ...[
-          SizedBox(height: 8.h),
-          _buildMessageBubble(
-            context,
-            text: ai.answer,
-            isUser: false,
-          ),
+          16.verticalSpace,
+          _buildMessageBubble(context, text: ai.answer, isUser: false),
         ],
-        if (ai.isLoading) ...[
-          SizedBox(height: 8.h),
-          _buildTypingIndicator(),
-        ],
+        if (ai.isLoading) ...[SizedBox(height: 8.h), _buildTypingIndicator()],
       ],
     );
   }
@@ -209,11 +209,7 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
           ),
         ),
         child: isUser
-            ? CustomText(
-                text: text,
-                color: Colors.white,
-                fontSize: 14,
-              )
+            ? CustomText(text: text, color: Colors.white, fontSize: 14)
             : Linkify(
                 text: text,
                 style: TextStyle(
