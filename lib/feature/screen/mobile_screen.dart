@@ -6,8 +6,10 @@ import 'package:mivo/core/app/app_colors.dart';
 import 'package:mivo/core/app/app_setting.dart';
 import 'package:mivo/core/custom_widgets/custom_button/custom_button.dart';
 import 'package:mivo/core/custom_widgets/custom_text/custom_text.dart';
+import 'package:mivo/core/model/ai_questions.dart';
 import 'package:mivo/feature/provider/app_provider.dart';
 import 'package:mivo/feature/screen/website_screen.dart';
+import 'package:mivo/feature/screen/widgets/show_question_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -20,6 +22,9 @@ class QrCreate extends StatelessWidget {
       body: SafeArea(
         child: Consumer<AppProvider>(
           builder: (context, data, _) {
+            if (data.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
             return SingleChildScrollView(
               padding: EdgeInsets.all(20.w),
               child: Column(
@@ -47,10 +52,8 @@ class QrCreate extends StatelessWidget {
                                 shrinkWrap: true,
                                 itemCount: data.questions.length,
                                 itemBuilder: (context, index) {
-                                  final question = data.questions[index];
-                                  return ListTile(
-                                    title: Text(question.question),
-                                    // subtitle: Text(question.answer),
+                                  return ShowQuestionDialog(
+                                    questions: data.questions[index],
                                   );
                                 },
                               ),

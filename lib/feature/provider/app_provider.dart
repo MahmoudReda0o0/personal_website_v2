@@ -48,12 +48,15 @@ class AppProvider extends ChangeNotifier {
   }
 
   Future<void> getQuestionsData() async {
+    isLoading = true;
+    notifyListeners();
     final data = await database.getQuestions();
     if (data.isNotEmpty) {
-      questions = data;
+      questions = data.reversed.toList();
       log('${data[0].question}', name: 'questions_data');
       notifyListeners();
     }
+    isLoading = false;
     notifyListeners();
   }
 }
