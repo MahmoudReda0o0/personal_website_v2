@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_website_v2/core/app/app_colors.dart';
+import 'package:mivo/core/app/app_colors.dart';
 
 class CustomText extends StatelessWidget {
   const CustomText({
@@ -32,7 +32,8 @@ class CustomText extends StatelessWidget {
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
-      style: style ??
+      style:
+          style ??
           TextStyle(
             color: color ?? AppColors.lightTextPrimary,
             fontSize: bold ? 20 : fontSize ?? 16,

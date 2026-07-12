@@ -6,4 +6,5 @@ class SupabaseConfig {
   static const tablePersonalInfo = 'personal_info';
   static const tableSocialMedia = 'social_media';
   static const tableSetting = 'settings';
+  static const tableQuestions = 'aiquestions';
 }

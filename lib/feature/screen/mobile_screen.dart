@@ -2,11 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:personal_website_v2/core/app/app_colors.dart';
-import 'package:personal_website_v2/core/custom_widgets/custom_button/custom_button.dart';
-import 'package:personal_website_v2/core/custom_widgets/custom_text/custom_text.dart';
-import 'package:personal_website_v2/feature/provider/app_provider.dart';
-import 'package:personal_website_v2/feature/screen/website_screen.dart';
+import 'package:mivo/core/app/app_colors.dart';
+import 'package:mivo/core/app/app_setting.dart';
+import 'package:mivo/core/custom_widgets/custom_button/custom_button.dart';
+import 'package:mivo/core/custom_widgets/custom_text/custom_text.dart';
+import 'package:mivo/feature/provider/app_provider.dart';
+import 'package:mivo/feature/screen/website_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -23,6 +24,48 @@ class QrCreate extends StatelessWidget {
               padding: EdgeInsets.all(20.w),
               child: Column(
                 children: [
+                  CustomButton(
+                    text: 'Show Questions',
+                    onTap: () async {
+                      await data.getQuestionsData();
+                      if (data.isLoading) {
+                        return await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Questions'),
+                            content: const CircularProgressIndicator(),
+                          ),
+                        );
+                      } else {
+                        return await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Questions'),
+                            content: SizedBox(
+                              width: double.maxFinite,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: data.questions.length,
+                                itemBuilder: (context, index) {
+                                  final question = data.questions[index];
+                                  return ListTile(
+                                    title: Text(question.question),
+                                    // subtitle: Text(question.answer),
+                                  );
+                                },
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text('Close'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
+                  ),
                   SizedBox(height: 20.h),
                   _buildProfileSection(context, data),
                   SizedBox(height: 32.h),
@@ -43,8 +86,9 @@ class QrCreate extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 44,
-          backgroundColor:
-              Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+          backgroundColor: Theme.of(
+            context,
+          ).colorScheme.primary.withValues(alpha: 0.15),
           child: Icon(
             Icons.person,
             size: 44,
@@ -96,10 +140,8 @@ class QrCreate extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
           QrImageView(
-            eyeStyle: QrEyeStyle(
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            data: 'https://www.youtube.com/watch?v=Er5DcIa4Hiw',
+            eyeStyle: QrEyeStyle(color: Theme.of(context).colorScheme.primary),
+            data: AppSetting.websiteUrl,
             version: QrVersions.auto,
             size: 220.w,
           ),
@@ -133,7 +175,10 @@ class QrCreate extends StatelessWidget {
               log('Social toggled: $val');
             },
           ),
-          Divider(height: 1, color: AppColors.lightBorder.withValues(alpha: 0.5)),
+          Divider(
+            height: 1,
+            color: AppColors.lightBorder.withValues(alpha: 0.5),
+          ),
           SizedBox(height: 8.h),
           _buildSettingToggle(
             context,
@@ -143,7 +188,10 @@ class QrCreate extends StatelessWidget {
               log('Projects toggled: $val');
             },
           ),
-          Divider(height: 1, color: AppColors.lightBorder.withValues(alpha: 0.5)),
+          Divider(
+            height: 1,
+            color: AppColors.lightBorder.withValues(alpha: 0.5),
+          ),
           SizedBox(height: 8.h),
           _buildSettingToggle(
             context,
@@ -201,15 +249,8 @@ class QrCreate extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CustomText(
-            text: label,
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-          ),
-          Switch(
-            value: value,
-            onChanged: onChanged,
-          ),
+          CustomText(text: label, fontSize: 15, fontWeight: FontWeight.w400),
+          Switch(value: value, onChanged: onChanged),
         ],
       ),
     );

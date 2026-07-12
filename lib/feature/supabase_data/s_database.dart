@@ -1,8 +1,10 @@
 import 'dart:developer';
 
-import 'package:personal_website_v2/core/model/personal_info.dart';
-import 'package:personal_website_v2/core/model/setting_model.dart';
-import 'package:personal_website_v2/feature/supabase_data/s_config.dart';
+import 'package:mivo/core/model/ai_questions.dart';
+import 'package:mivo/core/model/personal_info.dart';
+import 'package:mivo/core/model/setting_model.dart';
+import 'package:mivo/feature/supabase_data/s_config.dart';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseDatabase {
@@ -24,5 +26,16 @@ class SupabaseDatabase {
     final response = await supabase.from(SupabaseConfig.tableSetting).select();
     log(name: 'setting_response', response.toString());
     return SettingModel.fromJson(response[0]);
+  }
+
+  Future<List<QuestionModel>> getQuestions() async {
+    final response = await supabase
+        .from(SupabaseConfig.tableQuestions)
+        .select()
+        .order('created_at', ascending: false);
+
+    return response
+        .map<QuestionModel>((e) => QuestionModel.fromJson(e))
+        .toList();
   }
 }

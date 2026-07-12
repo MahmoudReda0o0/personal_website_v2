@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_website_v2/core/app/app_colors.dart';
+import 'package:mivo/core/app/app_colors.dart';
 
 class CustomBackButton extends StatelessWidget {
   const CustomBackButton({

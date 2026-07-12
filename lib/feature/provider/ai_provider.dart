@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:personal_website_v2/core/app/app_image.dart';
-import 'package:personal_website_v2/feature/supabase_data/s_function.dart';
+import 'package:mivo/core/app/app_image.dart';
+import 'package:mivo/feature/supabase_data/s_function.dart';
 
 enum MivoState { loading, success, error, typing, sad, thinking }
 
@@ -21,9 +21,14 @@ class MivoAiProvider extends ChangeNotifier {
     notifyListeners();
     final response = await supabaseFunction.askMivoV2(question);
     answer = response;
+    await addQuestion(question, response);
     isLoading = false;
     updateMivoState(MivoState.success);
     notifyListeners();
+  }
+
+  Future<void> addQuestion(String question, String answer) async {
+    await supabaseFunction.addQuestion(question, answer);
   }
 
   updateMivoState(MivoState state) {

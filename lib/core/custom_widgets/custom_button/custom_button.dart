@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:personal_website_v2/core/app/app_colors.dart';
+import 'package:mivo/core/app/app_colors.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton({
@@ -39,7 +39,9 @@ class CustomButton extends StatelessWidget {
         onPressed: disabled ? null : onTap,
         style: OutlinedButton.styleFrom(
           foregroundColor: textColor ?? AppColors.primary,
-          side: BorderSide(color: disabled ? Colors.grey : (color ?? AppColors.primary)),
+          side: BorderSide(
+            color: disabled ? Colors.grey : (color ?? AppColors.primary),
+          ),
           minimumSize: Size(width ?? double.infinity, height ?? 48.h),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -58,12 +60,14 @@ class CustomButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: color ?? AppColors.primary,
         foregroundColor: textColor ?? Colors.white,
-        disabledBackgroundColor: (color ?? AppColors.primary).withValues(alpha: 0.4),
-        disabledForegroundColor: (textColor ?? Colors.white).withValues(alpha: 0.6),
-        minimumSize: Size(width ?? double.infinity, height ?? 48.h),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+        disabledBackgroundColor: (color ?? AppColors.primary).withValues(
+          alpha: 0.4,
         ),
+        disabledForegroundColor: (textColor ?? Colors.white).withValues(
+          alpha: 0.6,
+        ),
+        minimumSize: Size(width ?? double.infinity, height ?? 48.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         textStyle: TextStyle(
           fontSize: textSize ?? 16.sp,
           fontWeight: FontWeight.w600,
@@ -90,11 +94,7 @@ class CustomButton extends StatelessWidget {
       return Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          icon!,
-          const SizedBox(width: 8),
-          Text(text),
-        ],
+        children: [icon!, const SizedBox(width: 8), Text(text)],
       );
     }
 

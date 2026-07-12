@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:mivo/core/model/ai_questions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseFunction {
@@ -39,6 +40,18 @@ class SupabaseFunction {
       'Q: $question \nA: ${response.data['answer']}',
     );
     return response.data['answer'];
+  }
+
+  Future<bool> addQuestion(String question, String answer) async {
+    final response = await functions.invoke(
+      'add_mivo_question',
+      body: {'question': question, 'answer': answer},
+    );
+    if (response.status == 200) {
+      return true;
+    }
+
+    return false;
   }
 
   Future<void> getJsonSkills() async {

@@ -1,8 +1,8 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:personal_website_v2/core/app/app_colors.dart';
-// import 'package:personal_website_v2/core/custom_widgets/custom_button/custom_back_button.dart';
-// import 'package:personal_website_v2/core/custom_widgets/custom_text/custom_text.dart';
+// import 'package:mivo/app/app_colors.dart';
+// import 'package:mivo/custom_widgets/custom_button/custom_back_button.dart';
+// import 'package:mivo/custom_widgets/custom_text/custom_text.dart';
 
 // class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 //   const CustomAppBar({
