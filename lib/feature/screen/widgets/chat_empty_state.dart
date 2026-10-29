@@ -54,10 +54,17 @@ class _LinkGreetingCard extends StatelessWidget {
   final LinkGreeting greeting;
   final bool isArabic;
 
+  static final _firstLetter = RegExp(r'[A-Za-z؀-ۿ]');
   static final _arabic = RegExp(r'[؀-ۿ]');
 
-  TextDirection _dir(String s) =>
-      _arabic.hasMatch(s) ? TextDirection.rtl : TextDirection.ltr;
+  /// Direction of the first letter, so a mostly-English message with a few
+  /// Arabic words still reads left-to-right (and the other way round).
+  TextDirection _dir(String s) {
+    final first = _firstLetter.firstMatch(s)?.group(0);
+    return first != null && _arabic.hasMatch(first)
+        ? TextDirection.rtl
+        : TextDirection.ltr;
+  }
 
   @override
   Widget build(BuildContext context) {
