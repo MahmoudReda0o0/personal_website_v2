@@ -1,0 +1,78 @@
+# Builds the Flutter web app and publishes it to the `gh-pages` branch of this
+# repo, for GitHub Pages at https://mahmoudreda0o0.github.io/personal_website_v2/
+#
+# Runs on every push to main that touches the app, or manually from the
+# Actions tab ("Run workflow"). The build log is published to the
+# `gh-pages-build-log` branch (on success and on failure).
+name: Deploy web to gh-pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "lib/**"
+      - "web/**"
+      - "assets/**"
+      - "pubspec.yaml"
+      - "pubspec.lock"
+      - ".github/workflows/deploy-gh-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-gh-pages
+  cancel-in-progress: true
+
+env:
+  # Project pages live under /<repo-name>/, so asset paths must include it.
+  BASE_HREF: /${{ github.event.repository.name }}/
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Build web
+        id: build
+        run: |
+          set -o pipefail
+          {
+            echo "source: ${{ github.sha }}"
+            echo "base href: $BASE_HREF"
+            flutter --version
+            flutter pub get
+            flutter analyze --no-fatal-infos --no-fatal-warnings || true
+            flutter build web --release --base-href "$BASE_HREF"
+          } 2>&1 | tee build.log
+
+      - name: Publish build log
+        if: always()
+        run: |
+          mkdir -p /tmp/log && cp build.log /tmp/log/ 2>/dev/null || echo "no log" > /tmp/log/build.log
+          echo "${{ steps.build.outcome }}" > /tmp/log/STATUS
+          cd /tmp/log
+          git init -q -b gh-pages-build-log
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -q -m "Build log: ${{ steps.build.outcome }} (${{ github.sha }})"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" gh-pages-build-log
+
+      - name: Publish to gh-pages
+        if: steps.build.outcome == 'success'
+        run: |
+          cd build/web
+          # Serve files as-is; skip Jekyll processing.
+          touch .nojekyll
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -q -m "Web build of ${{ github.sha }}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" gh-pages
