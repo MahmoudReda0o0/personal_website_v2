@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:math';
 import 'dart:ui' show PlatformDispatcher;
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:mivo/core/app/app_image.dart';
+import 'package:mivo/core/model/custom_link.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mivo/feature/supabase_data/s_database.dart';
 import 'package:mivo/feature/supabase_data/s_function.dart';
 
@@ -45,6 +49,54 @@ class MivoAiProvider extends ChangeNotifier {
   String get visitorLang =>
       PlatformDispatcher.instance.locale.languageCode == 'ar' ? 'ar' : 'en';
 
+  // ---------------------- Personal link (?c=code) ----------------------
+
+  /// Code from the address bar when the visitor came from a personal link.
+  String? linkCode;
+
+  /// Who the link was made for; null on the plain site link.
+  LinkGreeting? greeting;
+
+  /// Reads ?c= from the address, shows the greeting and records the open.
+  /// Website only; does nothing without a code or for a bad one.
+  Future<void> loadCustomLink() async {
+    if (!kIsWeb) return;
+    final code = Uri.base.queryParameters['c']?.trim().toLowerCase();
+    if (code == null || code.isEmpty) return;
+    try {
+      final result = await SupabaseDatabase.instance.openCustomLink(
+        code,
+        lang: visitorLang,
+        visitorId: await _visitorId(),
+      );
+      if (result == null) return;
+      linkCode = code;
+      greeting = result;
+      notifyListeners();
+    } catch (e) {
+      log('custom_link_error: $e');
+    }
+  }
+
+  /// Random id kept in this browser, so refreshes count as one open per day.
+  static Future<String?> _visitorId() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      var id = prefs.getString('mivo_visitor_id');
+      if (id == null) {
+        final rnd = Random.secure();
+        id = List.generate(
+          16,
+          (_) => rnd.nextInt(256).toRadixString(16).padLeft(2, '0'),
+        ).join();
+        await prefs.setString('mivo_visitor_id', id);
+      }
+      return id;
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<void> loadStarterQuestions() async {
     final lang = visitorLang;
     starterQuestions = _fallbackStarters[lang]!;
@@ -74,7 +126,7 @@ class MivoAiProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final reply = await supabaseFunction.askMivoV2(text);
+      final reply = await supabaseFunction.askMivoV2(text, linkCode: linkCode);
       answer = reply.answer;
       suggestions = reply.suggestions;
       isLoading = false;
@@ -96,7 +148,7 @@ class MivoAiProvider extends ChangeNotifier {
 
   Future<void> addQuestion(String question, String answer) async {
     try {
-      await supabaseFunction.addQuestion(question, answer);
+      await supabaseFunction.addQuestion(question, answer, linkCode: linkCode);
     } catch (e) {
       log('add_question_error: $e');
     }

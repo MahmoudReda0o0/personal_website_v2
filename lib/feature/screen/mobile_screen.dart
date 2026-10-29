@@ -8,6 +8,7 @@ import 'package:mivo/core/custom_widgets/custom_button/custom_button.dart';
 import 'package:mivo/core/custom_widgets/custom_text/custom_text.dart';
 import 'package:mivo/feature/provider/app_provider.dart';
 import 'package:mivo/feature/screen/admin_login_screen.dart';
+import 'package:mivo/feature/screen/custom_links_screen.dart';
 import 'package:mivo/feature/screen/website_screen.dart';
 import 'package:mivo/feature/supabase_data/s_auth.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +36,17 @@ class QrCreate extends StatelessWidget {
                       await data.getQuestionsData();
                       await data.openQuestionDialog(context, data);
                     },
+                  ),
+                  SizedBox(height: 12.h),
+                  CustomButton(
+                    text: 'Personal Links',
+                    icon: const Icon(Icons.link, size: 20),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const CustomLinksScreen(),
+                      ),
+                    ),
                   ),
                   SizedBox(height: 12.h),
                   CustomButton(

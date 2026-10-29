@@ -32,10 +32,12 @@ class SupabaseFunction {
 
   /// Returns Mivo's answer plus 2-3 follow-up suggestions.
   /// Throws if the function fails (e.g. the AI service is overloaded).
-  Future<AiChatModel> askMivoV2(String question) async {
+  /// [linkCode] is the personal link code (?c=...) when the visitor came
+  /// from one, so Mivo knows their name.
+  Future<AiChatModel> askMivoV2(String question, {String? linkCode}) async {
     final response = await functions.invoke(
       'ask_mivo_v2',
-      body: {'question': question},
+      body: {'question': question, if (linkCode != null) 'link_code': linkCode},
     );
     final reply = AiChatModel.fromJson(
       Map<String, dynamic>.from(response.data as Map),
@@ -47,10 +49,15 @@ class SupabaseFunction {
     return reply;
   }
 
-  Future<bool> addQuestion(String question, String answer) async {
+  /// Saves the Q&A; with [linkCode] it is linked to that personal link.
+  Future<bool> addQuestion(
+    String question,
+    String answer, {
+    String? linkCode,
+  }) async {
     final response = await functions.invoke(
       'add_mivo_question',
-      body: {'question': question, 'answer': answer},
+      body: {'question': question, 'answer': answer, if (linkCode != null) 'link_code': linkCode},
     );
     if (response.status == 200) {
       return true;

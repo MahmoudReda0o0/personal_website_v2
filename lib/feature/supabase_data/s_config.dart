@@ -12,4 +12,11 @@ class SupabaseConfig {
   static const tableSetting = 'settings';
   static const tableQuestions = 'aiquestions';
   static const tableSuggestedQuestions = 'suggested_questions';
+
+  /// Personal links (?c=code) made from the mobile app.
+  static const tableCustomLinks = 'custom_links';
+
+  /// Resolves a link code to {name, description} and records the open.
+  /// The only access the website has to personal links.
+  static const rpcOpenCustomLink = 'open_custom_link';
 }

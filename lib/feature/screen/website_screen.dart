@@ -28,7 +28,10 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) context.read<MivoAiProvider>().loadStarterQuestions();
+      if (!mounted) return;
+      final ai = context.read<MivoAiProvider>();
+      ai.loadStarterQuestions();
+      ai.loadCustomLink();
     });
   }
 
