@@ -7,7 +7,9 @@ import 'package:mivo/core/app/app_setting.dart';
 import 'package:mivo/core/custom_widgets/custom_button/custom_button.dart';
 import 'package:mivo/core/custom_widgets/custom_text/custom_text.dart';
 import 'package:mivo/feature/provider/app_provider.dart';
+import 'package:mivo/feature/screen/admin_login_screen.dart';
 import 'package:mivo/feature/screen/website_screen.dart';
+import 'package:mivo/feature/supabase_data/s_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -32,6 +34,23 @@ class QrCreate extends StatelessWidget {
                     onTap: () async {
                       await data.getQuestionsData();
                       await data.openQuestionDialog(context, data);
+                    },
+                  ),
+                  SizedBox(height: 12.h),
+                  CustomButton(
+                    text: 'Sign Out',
+                    isOutlined: true,
+                    icon: const Icon(Icons.logout, size: 20),
+                    onTap: () async {
+                      await SupabaseAuth.instance.signOut();
+                      if (!context.mounted) return;
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const AdminLoginScreen(),
+                        ),
+                        (_) => false,
+                      );
                     },
                   ),
                   SizedBox(height: 20.h),
