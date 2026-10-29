@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mivo/feature/provider/app_provider.dart';
+import 'package:mivo/feature/screen/admin_login_screen.dart';
 import 'package:mivo/feature/screen/mobile_screen.dart';
+import 'package:mivo/feature/supabase_data/s_auth.dart';
 import 'package:mivo/feature/screen/website_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -21,11 +23,16 @@ class _InitScreenState extends State<InitScreen> {
 
       if (!mounted) return;
 
+      // Web = the public website. Mobile = admin settings, behind sign-in.
+      final Widget next = kIsWeb
+          ? const WebsiteScreen()
+          : SupabaseAuth.instance.isAdminSignedIn
+          ? const QrCreate()
+          : const AdminLoginScreen();
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => kIsWeb ? const WebsiteScreen() : const QrCreate(),
-        ),
+        MaterialPageRoute(builder: (_) => next),
       );
     });
   }

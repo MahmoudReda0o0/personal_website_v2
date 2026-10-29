@@ -68,13 +68,24 @@ class AppProvider extends ChangeNotifier {
   Future<void> deleteQuestion(int id) async {
     isLoading = true;
     notifyListeners();
-    bool result = await supabaseFunction.deleteQuestion(id);
+    final bool result = await supabaseFunction.deleteQuestion(id);
     if (result) {
       await getQuestionsData();
-      openQuestionDialog(navigatorKey.currentContext!, this);
     }
     isLoading = false;
     notifyListeners();
+
+    final context = navigatorKey.currentContext;
+    if (context == null || !context.mounted) return;
+    if (result) {
+      openQuestionDialog(context, this);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Could not delete the question. Sign in again and retry.'),
+        ),
+      );
+    }
   }
 
   Future<dynamic> openQuestionDialog(BuildContext context, AppProvider data) {

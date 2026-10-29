@@ -30,14 +30,16 @@ class ShowQuestionDialog extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Text(
-                      ' ${questions.id}. ${questions.question}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
+                    Expanded(
+                      child: Text(
+                        ' ${questions.id}. ${questions.question}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                    Spacer(),
+                    SizedBox(width: 8.w),
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).pop();
