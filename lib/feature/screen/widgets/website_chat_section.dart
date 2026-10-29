@@ -1,53 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mivo/feature/provider/ai_provider.dart';
-import 'package:mivo/feature/screen/widgets/chat_empty_state.dart';
 import 'package:mivo/feature/screen/widgets/message_bubble.dart';
-import 'package:mivo/feature/screen/widgets/suggestion_chips.dart';
 import 'package:mivo/feature/screen/widgets/typing_indicator.dart';
 import 'package:provider/provider.dart';
 
+/// The visitor's question and Mivo's answer, shown under the question field
+/// and the suggestion chips. Grows with the answer; the page scrolls.
 class WebsiteChatSection extends StatelessWidget {
-  const WebsiteChatSection({
-    super.key,
-    required this.scrollController,
-    required this.onQuestionTap,
-  });
-
-  final ScrollController scrollController;
-
-  /// Sends a tapped suggestion straight to Mivo.
-  final ValueChanged<String> onQuestionTap;
+  const WebsiteChatSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<MivoAiProvider>(
       builder: (context, ai, _) {
-        if (ai.answer.isEmpty && !ai.isLoading) {
-          return ChatEmptyState(onQuestionTap: onQuestionTap);
+        if (ai.question.isEmpty && ai.answer.isEmpty && !ai.isLoading) {
+          return const SizedBox.shrink();
         }
-        return ListView(
-          controller: scrollController,
-          padding: EdgeInsets.all(16.w),
-          children: [
-            if (ai.question.isNotEmpty)
-              MessageBubble(text: ai.question, isUser: true),
-            if (ai.answer.isNotEmpty) ...[
-              16.verticalSpace,
-              MessageBubble(text: ai.answer, isUser: false),
+        return Padding(
+          padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (ai.question.isNotEmpty)
+                MessageBubble(text: ai.question, isUser: true),
+              if (ai.answer.isNotEmpty) ...[
+                12.verticalSpace,
+                MessageBubble(text: ai.answer, isUser: false),
+              ],
+              if (ai.isLoading) ...[
+                8.verticalSpace,
+                const TypingIndicator(),
+              ],
             ],
-            if (ai.isLoading) ...[
-              SizedBox(height: 8.h),
-              const TypingIndicator(),
-            ],
-            if (!ai.isLoading && ai.suggestions.isNotEmpty) ...[
-              14.verticalSpace,
-              SuggestionChips(
-                questions: ai.suggestions,
-                onTap: onQuestionTap,
-              ),
-            ],
-          ],
+          ),
         );
       },
     );

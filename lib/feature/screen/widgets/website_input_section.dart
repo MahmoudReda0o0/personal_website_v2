@@ -18,18 +18,8 @@ class WebsiteInputSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<MivoAiProvider>(
       builder: (context, ai, _) {
-        return Container(
-          padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 10,
-                offset: const Offset(0, -2),
-              ),
-            ],
-          ),
+        return Padding(
+          padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 10.h),
           child: Row(
             children: [
               Expanded(

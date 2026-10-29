@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mivo/feature/provider/ai_provider.dart';
+import 'package:mivo/feature/screen/widgets/chat_empty_state.dart';
 import 'package:mivo/feature/screen/widgets/mini_games/game_section.dart';
 import 'package:mivo/feature/screen/widgets/mivo_image_widget.dart';
+import 'package:mivo/feature/screen/widgets/suggestion_chips.dart';
 import 'package:mivo/feature/screen/widgets/website_chat_section.dart';
 import 'package:mivo/feature/screen/widgets/website_header.dart';
 import 'package:mivo/feature/screen/widgets/website_input_section.dart';
 import 'package:provider/provider.dart';
 
+/// Layout, top to bottom:
+/// header → Mivo → intro → question field → suggestion chips → Q&A → games.
+/// The chips sit right under the field and work exactly like typing a
+/// question there and pressing send.
 class WebsiteScreen extends StatefulWidget {
   const WebsiteScreen({super.key});
 
@@ -17,7 +23,6 @@ class WebsiteScreen extends StatefulWidget {
 
 class _WebsiteScreenState extends State<WebsiteScreen> {
   final TextEditingController _questionController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -30,41 +35,34 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
   @override
   void dispose() {
     _questionController.dispose();
-    _scrollController.dispose();
     super.dispose();
   }
 
-  /// Shows the new question and the start of Mivo's answer. The answer is
-  /// read top-down; the follow-up chips sit right after it.
-  void _scrollToAnswerStart() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    });
-  }
-
-  /// Sends the typed question.
-  void _askQuestion() => _send(_questionController.text);
-
-  /// Shared by the text box and the suggestion chips.
-  void _send(String question) {
-    final text = question.trim();
+  /// Sends whatever is in the question field.
+  Future<void> _askQuestion() async {
+    final text = _questionController.text.trim();
     final ai = context.read<MivoAiProvider>();
     if (text.isEmpty || ai.isLoading) return;
     FocusManager.instance.primaryFocus?.unfocus();
-    _questionController.clear();
-    ai.askMivoV2(text).then((_) {
-      if (mounted) _scrollToAnswerStart();
-    });
+    // The question stays in the field while Mivo thinks, then clears.
+    await ai.askMivoV2(text);
+    if (mounted) _questionController.clear();
+  }
+
+  /// A chip behaves like the visitor typed it into the field and sent it.
+  void _askSuggestion(String question) {
+    if (context.read<MivoAiProvider>().isLoading) return;
+    _questionController.text = question;
+    _askQuestion();
   }
 
   @override
   Widget build(BuildContext context) {
+    final ai = context.watch<MivoAiProvider>();
+    final hasConversation = ai.answer.isNotEmpty || ai.isLoading;
+    // Starter questions first; after an answer, its follow-ups.
+    final chips = hasConversation ? ai.suggestions : ai.starterQuestions;
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -73,23 +71,22 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
               const WebsiteHeader(),
               16.verticalSpace,
               const MivoImageWidget(),
-              SizedBox(
-                height: 350.h,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: WebsiteChatSection(
-                        scrollController: _scrollController,
-                        onQuestionTap: _send,
-                      ),
-                    ),
-                    WebsiteInputSection(
-                      controller: _questionController,
-                      onSend: _askQuestion,
-                    ),
-                  ],
-                ),
+              const ChatIntro(),
+              12.verticalSpace,
+              WebsiteInputSection(
+                controller: _questionController,
+                onSend: _askQuestion,
               ),
+              if (!ai.isLoading && chips.isNotEmpty) ...[
+                SuggestionChips(
+                  questions: chips,
+                  onTap: _askSuggestion,
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                ),
+                8.verticalSpace,
+              ],
+              const WebsiteChatSection(),
+              24.verticalSpace,
               GameSection(),
             ],
           ),
