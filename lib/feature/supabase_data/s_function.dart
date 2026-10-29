@@ -54,6 +54,19 @@ class SupabaseFunction {
     return false;
   }
 
+  Future<bool> deleteQuestion(int id) async {
+    try {
+      final response = await functions.invoke(
+        'delete_question',
+        body: {'id': id},
+      );
+
+      return response.data['success'] == true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<void> getJsonSkills() async {
     final response = await functions.invoke('get_skills_json', body: {});
     log(name: 'function_response', response.data.toString());

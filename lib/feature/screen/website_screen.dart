@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mivo/feature/provider/ai_provider.dart';
+import 'package:mivo/feature/screen/widgets/mini_games/game_section.dart';
 import 'package:mivo/feature/screen/widgets/mivo_image_widget.dart';
 import 'package:mivo/feature/screen/widgets/website_chat_section.dart';
 import 'package:mivo/feature/screen/widgets/website_header.dart';
@@ -51,28 +52,31 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            const WebsiteHeader(),
-            16.verticalSpace,
-            const MivoImageWidget(),
-            SizedBox(
-              height: 350.h,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: WebsiteChatSection(
-                      scrollController: _scrollController,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const WebsiteHeader(),
+              16.verticalSpace,
+              const MivoImageWidget(),
+              SizedBox(
+                height: 350.h,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: WebsiteChatSection(
+                        scrollController: _scrollController,
+                      ),
                     ),
-                  ),
-                  WebsiteInputSection(
-                    controller: _questionController,
-                    onSend: _askQuestion,
-                  ),
-                ],
+                    WebsiteInputSection(
+                      controller: _questionController,
+                      onSend: _askQuestion,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              GameSection(),
+            ],
+          ),
         ),
       ),
     );

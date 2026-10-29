@@ -6,10 +6,8 @@ import 'package:mivo/core/app/app_colors.dart';
 import 'package:mivo/core/app/app_setting.dart';
 import 'package:mivo/core/custom_widgets/custom_button/custom_button.dart';
 import 'package:mivo/core/custom_widgets/custom_text/custom_text.dart';
-import 'package:mivo/core/model/ai_questions.dart';
 import 'package:mivo/feature/provider/app_provider.dart';
 import 'package:mivo/feature/screen/website_screen.dart';
-import 'package:mivo/feature/screen/widgets/show_question_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -33,40 +31,7 @@ class QrCreate extends StatelessWidget {
                     text: 'Show Questions',
                     onTap: () async {
                       await data.getQuestionsData();
-                      if (data.isLoading) {
-                        return await showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Questions'),
-                            content: const CircularProgressIndicator(),
-                          ),
-                        );
-                      } else {
-                        return await showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Questions'),
-                            content: SizedBox(
-                              width: double.maxFinite,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: data.questions.length,
-                                itemBuilder: (context, index) {
-                                  return ShowQuestionDialog(
-                                    questions: data.questions[index],
-                                  );
-                                },
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('Close'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
+                      await data.openQuestionDialog(context, data);
                     },
                   ),
                   SizedBox(height: 20.h),

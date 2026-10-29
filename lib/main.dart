@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mivo/core/app/app_keys.dart';
 import 'package:mivo/core/app/app_theme.dart';
 import 'package:mivo/feature/provider/ai_provider.dart';
 import 'package:mivo/feature/provider/app_provider.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         designSize: const Size(414, 896),
         builder: (context, child) {
           return MaterialApp(
+            navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
             title: 'Personal Website',
             theme: AppTheme.light,
