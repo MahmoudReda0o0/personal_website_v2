@@ -2,8 +2,7 @@
 # repo, for GitHub Pages at https://mahmoudreda0o0.github.io/personal_website_v2/
 #
 # Runs on every push to main that touches the app, or manually from the
-# Actions tab ("Run workflow"). The build log is published to the
-# `gh-pages-build-log` branch (on success and on failure).
+# Actions tab ("Run workflow"). Build logs are in the Actions tab.
 name: Deploy web to gh-pages
 
 on:
@@ -43,7 +42,6 @@ jobs:
       - name: Build web
         id: build
         run: |
-          set -o pipefail
           {
             echo "source: ${{ github.sha }}"
             echo "base href: $BASE_HREF"
@@ -51,19 +49,7 @@ jobs:
             flutter pub get
             flutter analyze --no-fatal-infos --no-fatal-warnings || true
             flutter build web --release --base-href "$BASE_HREF"
-          } 2>&1 | tee build.log
-
-      - name: Publish build log
-        if: always()
-        run: |
-          mkdir -p /tmp/log && cp build.log /tmp/log/ 2>/dev/null || echo "no log" > /tmp/log/build.log
-          echo "${{ steps.build.outcome }}" > /tmp/log/STATUS
-          cd /tmp/log
-          git init -q -b gh-pages-build-log
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A && git commit -q -m "Build log: ${{ steps.build.outcome }} (${{ github.sha }})"
-          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" gh-pages-build-log
+          }
 
       - name: Publish to gh-pages
         if: steps.build.outcome == 'success'
