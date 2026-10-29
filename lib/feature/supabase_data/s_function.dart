@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:mivo/core/model/ai_questions.dart';
+import 'package:mivo/core/model/ai_chat_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseFunction {
@@ -30,16 +30,21 @@ class SupabaseFunction {
     return response.data['answer'];
   }
 
-  Future<String> askMivoV2(String question) async {
+  /// Returns Mivo's answer plus 2-3 follow-up suggestions.
+  /// Throws if the function fails (e.g. the AI service is overloaded).
+  Future<AiChatModel> askMivoV2(String question) async {
     final response = await functions.invoke(
       'ask_mivo_v2',
       body: {'question': question},
     );
+    final reply = AiChatModel.fromJson(
+      Map<String, dynamic>.from(response.data as Map),
+    );
     log(
       name: 'ask_mivo_v2_response',
-      'Q: $question \nA: ${response.data['answer']}',
+      'Q: $question \nA: ${reply.answer}\nSuggestions: ${reply.suggestions}',
     );
-    return response.data['answer'];
+    return reply;
   }
 
   Future<bool> addQuestion(String question, String answer) async {

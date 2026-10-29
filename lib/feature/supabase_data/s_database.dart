@@ -28,6 +28,22 @@ class SupabaseDatabase {
     return SettingModel.fromJson(response[0]);
   }
 
+  /// Starter questions shown as chips before the visitor asks anything.
+  /// [lang] is 'en' or 'ar'. Managed from the `suggested_questions` table.
+  Future<List<String>> getSuggestedQuestions(String lang) async {
+    final response = await supabase
+        .from(SupabaseConfig.tableSuggestedQuestions)
+        .select('question')
+        .eq('lang', lang)
+        .eq('is_active', true)
+        .order('sort_order', ascending: true);
+
+    return response
+        .map<String>((e) => (e['question'] ?? '').toString().trim())
+        .where((q) => q.isNotEmpty)
+        .toList();
+  }
+
   Future<List<QuestionModel>> getQuestions() async {
     final response = await supabase
         .from(SupabaseConfig.tableQuestions)

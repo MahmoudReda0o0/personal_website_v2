@@ -20,6 +20,14 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
   final ScrollController _scrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) context.read<MivoAiProvider>().loadStarterQuestions();
+    });
+  }
+
+  @override
   void dispose() {
     _questionController.dispose();
     _scrollController.dispose();
@@ -38,13 +46,18 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
     });
   }
 
-  void _askQuestion() {
-    final text = _questionController.text.trim();
-    if (text.isEmpty) return;
+  /// Sends the typed question.
+  void _askQuestion() => _send(_questionController.text);
+
+  /// Shared by the text box and the suggestion chips.
+  void _send(String question) {
+    final text = question.trim();
+    final ai = context.read<MivoAiProvider>();
+    if (text.isEmpty || ai.isLoading) return;
     FocusManager.instance.primaryFocus?.unfocus();
-    context.read<MivoAiProvider>().askMivoV2(text).then((_) {
-      _questionController.clear();
-      _scrollToBottom();
+    _questionController.clear();
+    ai.askMivoV2(text).then((_) {
+      if (mounted) _scrollToBottom();
     });
   }
 
@@ -65,6 +78,7 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
                     Expanded(
                       child: WebsiteChatSection(
                         scrollController: _scrollController,
+                        onQuestionTap: _send,
                       ),
                     ),
                     WebsiteInputSection(
