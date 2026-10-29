@@ -17,9 +17,9 @@ class ChatEmptyState extends StatelessWidget {
     final ai = context.watch<MivoAiProvider>();
     final isArabic = ai.visitorLang == 'ar';
 
-    // Scrollable so the chips never overflow the fixed-height chat box.
+    // Scrollable so nothing overflows the fixed-height chat box.
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(vertical: 12.h),
       child: Column(
         children: [
           Icon(
@@ -44,10 +44,13 @@ class ChatEmptyState extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           14.verticalSpace,
+          // Edge-to-edge row, so chips scroll under the screen edge.
           SuggestionChips(
             questions: ai.starterQuestions,
             enabled: !ai.isLoading,
             onTap: onQuestionTap,
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            center: true,
           ),
         ],
       ),

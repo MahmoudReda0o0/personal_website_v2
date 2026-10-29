@@ -34,11 +34,13 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
     super.dispose();
   }
 
-  void _scrollToBottom() {
+  /// Shows the new question and the start of Mivo's answer. The answer is
+  /// read top-down; the follow-up chips sit right after it.
+  void _scrollToAnswerStart() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
+          0,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
@@ -57,7 +59,7 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
     FocusManager.instance.primaryFocus?.unfocus();
     _questionController.clear();
     ai.askMivoV2(text).then((_) {
-      if (mounted) _scrollToBottom();
+      if (mounted) _scrollToAnswerStart();
     });
   }
 

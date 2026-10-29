@@ -45,7 +45,6 @@ class WebsiteChatSection extends StatelessWidget {
               SuggestionChips(
                 questions: ai.suggestions,
                 onTap: onQuestionTap,
-                alignment: WrapAlignment.start,
               ),
             ],
           ],
