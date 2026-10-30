@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mivo/core/app/app_theme.dart';
+import 'package:mivo/core/app/website_theme.dart';
 import 'package:mivo/feature/provider/ai_provider.dart';
 import 'package:mivo/feature/provider/dev_mode_provider.dart';
+import 'package:mivo/feature/screen/widgets/aurora_backdrop.dart';
 import 'package:mivo/feature/screen/widgets/chat_empty_state.dart';
 import 'package:mivo/feature/screen/widgets/dev_tools/dev_tools_layer.dart';
 import 'package:mivo/feature/screen/widgets/dev_tools/inspect_catalog.dart';
@@ -92,7 +93,7 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
                 16.verticalSpace,
                 const InspectTarget(
                   info: InspectCatalog.mivo,
-                  child: MivoImageWidget(),
+                  child: AuroraBackdrop(child: MivoImageWidget()),
                 ),
                 const InspectTarget(
                   info: InspectCatalog.intro,
@@ -151,14 +152,8 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
 
   final Map<int, ThemeData> _themes = {};
 
-  ThemeData _themeFor(int accentIndex) => _themes.putIfAbsent(accentIndex, () {
-    final dark = AppTheme.dark;
-    if (accentIndex == 0) return dark;
-    return dark.copyWith(
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: DevModeProvider.accents[accentIndex],
-        brightness: Brightness.dark,
-      ),
-    );
-  });
+  ThemeData _themeFor(int accentIndex) => _themes.putIfAbsent(
+    accentIndex,
+    () => WebsiteTheme.build(DevModeProvider.accents[accentIndex]),
+  );
 }

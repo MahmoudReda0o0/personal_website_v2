@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:mivo/core/app/website_theme.dart';
 
 /// The website's "Flutter dev tools", a nod to `flutter run`:
 /// - Hot reload (⚡ or the `r` key): swaps the accent colour while keeping
@@ -8,14 +9,8 @@ import 'package:flutter/material.dart';
 /// - Hot restart (`R`): back to the original look with a fresh chat.
 /// - Inspect (`i`): outlines the widgets; tap one to see how it's built.
 class DevModeProvider extends ChangeNotifier {
-  /// Accent seeds a hot reload cycles through. Index 0 is the site's own.
-  static const List<Color> accents = [
-    Color(0xFF402EDC), // Mivo purple
-    Color(0xFF00A8C6), // cyan
-    Color(0xFFE5533D), // coral
-    Color(0xFF1FAA59), // green
-    Color(0xFFE0A100), // amber
-  ];
+  /// Accent pairs a hot reload cycles through. Index 0 is the site's own.
+  static const List<AccentPair> accents = WebsiteTheme.accents;
 
   /// Fixed so the numbers look like the same app reloading each time.
   static const int libraryCount = 1287;
@@ -23,7 +18,7 @@ class DevModeProvider extends ChangeNotifier {
   final Random _random = Random();
 
   int accentIndex = 0;
-  Color get accent => accents[accentIndex];
+  AccentPair get accent => accents[accentIndex];
 
   bool inspecting = false;
 

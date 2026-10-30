@@ -82,7 +82,7 @@ class _GitHubActivityLineState extends State<GitHubActivityLine>
                 overflow: TextOverflow.ellipsis,
                 textDirection: arabic ? TextDirection.rtl : TextDirection.ltr,
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.92),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),

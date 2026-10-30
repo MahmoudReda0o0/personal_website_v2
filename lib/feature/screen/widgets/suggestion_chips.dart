@@ -67,7 +67,7 @@ class SuggestionChips extends StatelessWidget {
                   avatar: Icon(
                     Icons.auto_awesome_rounded,
                     size: 16,
-                    color: scheme.primary,
+                    color: scheme.secondary,
                   ),
                   label: Text(
                     q,
@@ -76,7 +76,7 @@ class SuggestionChips extends StatelessWidget {
                         : TextDirection.ltr,
                   ),
                   labelStyle: TextStyle(fontSize: 13, color: scheme.onSurface),
-                  backgroundColor: scheme.primary.withValues(alpha: 0.10),
+                  backgroundColor: scheme.primary.withValues(alpha: 0.16),
                   side: BorderSide(
                     color: scheme.primary.withValues(alpha: 0.45),
                   ),

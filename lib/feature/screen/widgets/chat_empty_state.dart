@@ -28,7 +28,7 @@ class ChatIntro extends StatelessWidget {
             14.verticalSpace,
           ],
           const CustomText(
-            color: AppColors.darkTextPrimary,
+            color: AppColors.inkText,
             text: 'Ask me anything!',
             fontSize: 20,
             fontWeight: FontWeight.w600,
@@ -38,7 +38,7 @@ class ChatIntro extends StatelessWidget {
             text: isArabic
                 ? 'اكتب سؤالك، أو اختار سؤال من تحت:'
                 : 'Type your question, or pick one below:',
-            color: AppColors.darkTextPrimary,
+            color: AppColors.inkTextSecondary,
             fontSize: 14,
             textAlign: TextAlign.center,
           ),
@@ -89,7 +89,7 @@ class _LinkGreetingCard extends StatelessWidget {
             textAlign: TextAlign.center,
             textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
             style: const TextStyle(
-              color: AppColors.darkTextPrimary,
+              color: AppColors.inkText,
               fontSize: 22,
               fontWeight: FontWeight.w700,
             ),
@@ -101,7 +101,7 @@ class _LinkGreetingCard extends StatelessWidget {
               textAlign: TextAlign.center,
               textDirection: _dir(greeting.description!),
               style: const TextStyle(
-                color: AppColors.darkTextSecondary,
+                color: AppColors.inkTextSecondary,
                 fontSize: 15,
                 height: 1.45,
               ),

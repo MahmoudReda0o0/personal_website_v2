@@ -36,8 +36,9 @@ class MessageBubble extends StatelessWidget {
                   fontSize: 14,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
+                // Secondary (cyan): readable on the dark bubble (8:1).
                 linkStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.secondary,
                   decoration: TextDecoration.underline,
                 ),
                 onOpen: (link) async {
