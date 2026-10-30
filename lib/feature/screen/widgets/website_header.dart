@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mivo/feature/provider/app_provider.dart';
+import 'package:mivo/feature/screen/widgets/github_activity_line.dart';
 import 'package:provider/provider.dart';
 
 class WebsiteHeader extends StatelessWidget {
@@ -45,6 +46,7 @@ class WebsiteHeader extends StatelessWidget {
                         fontSize: 13,
                       ),
                     ),
+                    const GitHubActivityLine(),
                   ],
                 ),
               ),

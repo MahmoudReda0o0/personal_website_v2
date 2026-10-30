@@ -146,6 +146,15 @@ class MivoAiProvider extends ChangeNotifier {
     }
   }
 
+  /// Clears the current Q&A (used by the website's hot restart).
+  void resetConversation() {
+    if (isLoading) return; // Let an answer in progress finish.
+    question = '';
+    answer = '';
+    suggestions = <String>[];
+    updateMivoState(MivoState.success);
+  }
+
   Future<void> addQuestion(String question, String answer) async {
     try {
       await supabaseFunction.addQuestion(question, answer, linkCode: linkCode);

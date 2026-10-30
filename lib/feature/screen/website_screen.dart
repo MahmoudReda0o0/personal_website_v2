@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mivo/feature/provider/ai_provider.dart';
+import 'package:mivo/feature/provider/dev_mode_provider.dart';
 import 'package:mivo/feature/screen/widgets/chat_empty_state.dart';
+import 'package:mivo/feature/screen/widgets/dev_tools/dev_tools_layer.dart';
+import 'package:mivo/feature/screen/widgets/dev_tools/inspect_catalog.dart';
+import 'package:mivo/feature/screen/widgets/dev_tools/inspect_target.dart';
 import 'package:mivo/feature/screen/widgets/mini_games/game_section.dart';
 import 'package:mivo/feature/screen/widgets/mivo_image_widget.dart';
 import 'package:mivo/feature/screen/widgets/suggestion_chips.dart';
@@ -14,6 +18,9 @@ import 'package:provider/provider.dart';
 /// header → Mivo → intro → question field → suggestion chips → Q&A → games.
 /// The chips sit right under the field and work exactly like typing a
 /// question there and pressing send.
+///
+/// On top sit the "Flutter dev tools" (hot reload, inspect); each section is
+/// wrapped in an [InspectTarget] so the inspector can explain it.
 class WebsiteScreen extends StatefulWidget {
   const WebsiteScreen({super.key});
 
@@ -23,6 +30,7 @@ class WebsiteScreen extends StatefulWidget {
 
 class _WebsiteScreenState extends State<WebsiteScreen> {
   final TextEditingController _questionController = TextEditingController();
+  final DevModeProvider _devMode = DevModeProvider();
 
   @override
   void initState() {
@@ -38,6 +46,7 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
   @override
   void dispose() {
     _questionController.dispose();
+    _devMode.dispose();
     super.dispose();
   }
 
@@ -66,34 +75,84 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
     // Starter questions first; after an answer, its follow-ups.
     final chips = hasConversation ? ai.suggestions : ai.starterQuestions;
 
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const WebsiteHeader(),
-              16.verticalSpace,
-              const MivoImageWidget(),
-              const ChatIntro(),
-              12.verticalSpace,
-              WebsiteInputSection(
-                controller: _questionController,
-                onSend: _askQuestion,
-              ),
-              if (!ai.isLoading && chips.isNotEmpty) ...[
-                SuggestionChips(
-                  questions: chips,
-                  onTap: _askSuggestion,
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+    final page = Scaffold(
+      body: DevToolsLayer(
+        onRestart: () {
+          if (!ai.isLoading) _questionController.clear();
+        },
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const InspectTarget(
+                  info: InspectCatalog.header,
+                  child: WebsiteHeader(),
                 ),
-                8.verticalSpace,
+                16.verticalSpace,
+                const InspectTarget(
+                  info: InspectCatalog.mivo,
+                  child: MivoImageWidget(),
+                ),
+                const InspectTarget(
+                  info: InspectCatalog.intro,
+                  child: ChatIntro(),
+                ),
+                12.verticalSpace,
+                InspectTarget(
+                  info: InspectCatalog.input,
+                  child: WebsiteInputSection(
+                    controller: _questionController,
+                    onSend: _askQuestion,
+                  ),
+                ),
+                if (!ai.isLoading && chips.isNotEmpty) ...[
+                  InspectTarget(
+                    info: InspectCatalog.chips,
+                    child: SuggestionChips(
+                      questions: chips,
+                      onTap: _askSuggestion,
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    ),
+                  ),
+                  8.verticalSpace,
+                ],
+                const InspectTarget(
+                  info: InspectCatalog.chat,
+                  child: WebsiteChatSection(),
+                ),
+                24.verticalSpace,
+                const GameSection(),
+                // Room so the floating dev toolbar never covers the end.
+                72.verticalSpace,
               ],
-              const WebsiteChatSection(),
-              24.verticalSpace,
-              GameSection(),
-            ],
+            ),
           ),
         ),
+      ),
+    );
+
+    // Hot reload swaps the accent; AnimatedTheme morphs the colours while
+    // every bit of state (chat, games) stays as it was.
+    return ChangeNotifierProvider.value(
+      value: _devMode,
+      child: Consumer<DevModeProvider>(
+        builder: (context, dev, child) {
+          final base = Theme.of(context);
+          final theme = dev.accentIndex == 0
+              ? base
+              : base.copyWith(
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: dev.accent,
+                    brightness: base.brightness,
+                  ),
+                );
+          return AnimatedTheme(
+            data: theme,
+            duration: const Duration(milliseconds: 450),
+            child: child!,
+          );
+        },
+        child: page,
       ),
     );
   }
