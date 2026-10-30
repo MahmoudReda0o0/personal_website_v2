@@ -12,7 +12,7 @@ import 'package:mivo/feature/supabase_data/s_database.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Admin (mobile): create a personal link for a company or a person, and
-/// copy any link made before. Opening the link shows "Hi <name>" plus the
+/// copy any link made before. Opening the link shows `Hi <name>` plus the
 /// optional message on the website.
 class CustomLinksScreen extends StatefulWidget {
   const CustomLinksScreen({super.key});

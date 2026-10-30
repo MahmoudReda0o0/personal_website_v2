@@ -164,15 +164,15 @@ class _DevToolsLayerState extends State<DevToolsLayer>
           ),
         ),
 
-        // Inspect banner.
+        // Inspect banner, above the toolbar so it never covers the header.
         Positioned(
-          top: 8,
+          bottom: 66,
           left: 12,
           right: 12,
           child: SafeArea(
-            bottom: false,
+            top: false,
             child: AnimatedSlide(
-              offset: inspecting ? Offset.zero : const Offset(0, -1.6),
+              offset: inspecting ? Offset.zero : const Offset(0, 0.6),
               duration: const Duration(milliseconds: 220),
               curve: Curves.easeOutCubic,
               child: AnimatedOpacity(
@@ -193,11 +193,13 @@ class _DevToolsLayerState extends State<DevToolsLayer>
           ),
         ),
 
-        // Terminal toast.
-        Positioned(
+        // Terminal toast (moves up while the inspect banner is showing).
+        AnimatedPositioned(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
           left: 12,
           right: 12,
-          bottom: 68,
+          bottom: inspecting ? 124 : 68,
           child: SafeArea(
             top: false,
             child: IgnorePointer(

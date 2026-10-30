@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mivo/core/app/app_theme.dart';
 import 'package:mivo/feature/provider/ai_provider.dart';
 import 'package:mivo/feature/provider/dev_mode_provider.dart';
 import 'package:mivo/feature/screen/widgets/chat_empty_state.dart';
@@ -131,29 +132,33 @@ class _WebsiteScreenState extends State<WebsiteScreen> {
       ),
     );
 
+    // The website is always dark: its texts and game cards are designed for
+    // it, and following a light-mode device made some text invisible.
     // Hot reload swaps the accent; AnimatedTheme morphs the colours while
     // every bit of state (chat, games) stays as it was.
     return ChangeNotifierProvider.value(
       value: _devMode,
       child: Consumer<DevModeProvider>(
-        builder: (context, dev, child) {
-          final base = Theme.of(context);
-          final theme = dev.accentIndex == 0
-              ? base
-              : base.copyWith(
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: dev.accent,
-                    brightness: base.brightness,
-                  ),
-                );
-          return AnimatedTheme(
-            data: theme,
-            duration: const Duration(milliseconds: 450),
-            child: child!,
-          );
-        },
+        builder: (context, dev, child) => AnimatedTheme(
+          data: _themeFor(dev.accentIndex),
+          duration: const Duration(milliseconds: 450),
+          child: child!,
+        ),
         child: page,
       ),
     );
   }
+
+  final Map<int, ThemeData> _themes = {};
+
+  ThemeData _themeFor(int accentIndex) => _themes.putIfAbsent(accentIndex, () {
+    final dark = AppTheme.dark;
+    if (accentIndex == 0) return dark;
+    return dark.copyWith(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: DevModeProvider.accents[accentIndex],
+        brightness: Brightness.dark,
+      ),
+    );
+  });
 }
