@@ -30,8 +30,23 @@ class AppProvider extends ChangeNotifier {
     await getInitData();
   }
 
+  /// Startup must never get stuck: each request has a time limit and its own
+  /// error handling, and on failure the defaults stay in place.
   Future<void> getInitData() async {
-    await Future.wait([getMyInfoData(), getSettingData()]);
+    await Future.wait([
+      _safeInit('personal_info', getMyInfoData),
+      _safeInit('settings', getSettingData),
+    ]);
+  }
+
+  static const Duration _initTimeout = Duration(seconds: 10);
+
+  Future<void> _safeInit(String name, Future<void> Function() load) async {
+    try {
+      await load().timeout(_initTimeout);
+    } catch (e) {
+      log('init_error ($name): $e');
+    }
   }
 
   Future<void> getMyInfoData() async {

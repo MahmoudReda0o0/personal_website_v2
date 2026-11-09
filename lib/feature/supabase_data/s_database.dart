@@ -20,13 +20,16 @@ class SupabaseDatabase {
         .from(SupabaseConfig.tablePersonalInfo)
         .select();
     log(name: 'personal_info_response', response.toString());
-    return MyInfoModel.fromJson(response[0]);
+    // Empty when the table has no rows or RLS hides them from visitors.
+    if (response.isEmpty) return null;
+    return MyInfoModel.fromJson(response.first);
   }
 
   Future<SettingModel?> getSettings() async {
     final response = await supabase.from(SupabaseConfig.tableSetting).select();
     log(name: 'setting_response', response.toString());
-    return SettingModel.fromJson(response[0]);
+    if (response.isEmpty) return null;
+    return SettingModel.fromJson(response.first);
   }
 
   // ---------------------- Personal links (?c=code) ----------------------

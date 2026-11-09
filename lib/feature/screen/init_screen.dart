@@ -19,7 +19,13 @@ class _InitScreenState extends State<InitScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await context.read<AppProvider>().initializeApp();
+      // Whatever happens during startup, always move on to the next screen
+      // instead of leaving the visitor on an endless loading spinner.
+      try {
+        await context.read<AppProvider>().initializeApp();
+      } catch (e) {
+        debugPrint('initializeApp failed: $e');
+      }
 
       if (!mounted) return;
 
